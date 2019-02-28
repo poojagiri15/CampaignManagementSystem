@@ -1,114 +1,129 @@
 <!doctype html>
-
 <html lang="en">
 <head>
 
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 50%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
-
-
   <meta charset="utf-8">
-
   <title>The HTML5 Herald</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
+  <style>
+	table1 {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 50%;
+	}
+
+	td, th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+	}
+  </style>
 </head>
 
 <body onload="getData('http://localhost:8080/CampaignMgmt2/campaign')">
-  <script src="js/scripts.js"></script>
 
-	<div>
+<div>
 	<h1>Add Campaign </h1>
-    <input id = "Name" type="text" placeholder="name"/>
+	<input id = "Name" type="text" placeholder="name"/>
     <button onclick="addData('http://localhost:8080/CampaignMgmt2/campaign')">Add</button>
-</div>
-	<br/>
-	<div>
+</div> <br/>
+<div>
 	<h1>Delete Campaign </h1>
 	<input  id="Id" type="number" placeholder="id"/>
     <button onclick="deleteData('http://localhost:8080/CampaignMgmt2')">Delete</button>
-</div>
-	<br/>
+</div> <br/>
 <div>
 	<h1>List of Campaigns</h1>
-    <div id="box" style="height: 50px; width: 100%;">
-	</div>
+    <div id="box" style="height: 50px; width: 100%;"></div>
 	<h1 id="firstdiv"></h1>
- </div>
-	<br/> 
+</div> <br/> 
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/scripts.js"></script>
+
 <script>
+function addData(dar) {
+  $.ajax(
+    {
+      url: 'http://localhost:8080/CampaignMgmt2/campaign',
+      data: {
+        "cname": $("#Name").val()},
+      method: "POST",
+      mode: 'no-cors'
+    }
+  );
+  window.location.reload();
+}
 
 
- function addData(dar) {
-	     $.ajax( 
-	    	 {
-		       url : 'http://localhost:8080/CampaignMgmt2/campaign',
-      	       data : { "cname" : $("#Name").val()},
-		       method : "POST",
-			   mode: 'no-cors'
-	    	 }
-	      );
-		  window.location.reload();
-  }
-  
-  
-   function deleteData(far) {
-   console.log("hi")
-	     $.ajax( 
-	    	 {
-		       url : 'http://localhost:8080/CampaignMgmt2/delete',  
-		       method : "DELETE",
-			   data : { "id" : $("#Id").val()},
-			   //mode: 'no-cors'
-	    	 }
-	      );
-		  window.location.reload();
-  }
+function deleteData(far) {
+  $.ajax(
+    {
+      url: 'http://localhost:8080/CampaignMgmt2/delete',
+      method: "DELETE",
+      data: {
+        "id": $("#Id").val()},
+    }
+  );
+  window.location.reload();
+}
 
 
 function getData(url) {
-  fetch(url , {
+  fetch(url, {
     method: 'get',
-	//mode: 'no-cors'
-  }).then(function(response){
+    //mode: 'no-cors'
+  }).then(function(response) {
     return response.json()})
-	.then(function(data){
-		console.log(data);
-		var display = document.getElementById("firstdiv")
-		//display.innerHTML = data;
-		var CampaignName="<table border='1|1'>";;
-		CampaignName+="<th>"+"Campaign Id"+"</th>";
-		CampaignName+="<th>"+"Campaign Name"+"</th>";
-		for (let i = 0; i < data.length; i++) { 		    
-		    CampaignName+="<tr>";
-			CampaignName+="<td>"+data[i].cid+"</td>";
-			CampaignName+="<td>"+data[i].cname+"</td>";
-			CampaignName+="</tr>";			
-		}
-		CampaignName+="</table>";
-		document.getElementById("box").innerHTML = CampaignName;
-	});
+  .then(function(data) {
+    console.log(data);
+    var display = document.getElementById("firstdiv")
+    var CampaignName = "<table id ='table1' border='1|1'>";;
+    CampaignName += "<th>"+"Campaign Id"+"</th>";
+    CampaignName += "<th>"+"Campaign Name"+"</th>";
+    CampaignName += "<th>"+"Sites"+"</th>";
+    for (let i = 0; i < data.length; i++) {
+      CampaignName += "<tr>";
+      CampaignName += "<td>"+data[i].cid+"</td>";
+      CampaignName += "<td>"+data[i].cname+"</td>";
+      CampaignName += "<td id="+"'cid_"+data[i].cid+"'"+">"+"<button onclick='getSitesForCampaign("+data[i].cid+")'>"+"Sites"+"</button>"+"</a>"+"</td>";
+      CampaignName += "</tr>";
+    }
+    CampaignName += "</table>";
+    document.getElementById("box").innerHTML = CampaignName;
+  });
 }
 
+function getSitesForCampaign(cid) {
+  var i = cid;
+  fetch('http://localhost:8080/CampaignMgmt2/site?cid='+cid, {
+    method: 'GET',
+    //mode: 'no-cors'
+  }).then(function(response) {
+    return response.json()})
+  .then(function(data) {
+    console.log(data);
+    var SiteName = "<td id="+"'ccid_"+data[i]+"'"+">"+"<button onclick='closesd("+cid+")'>"+"Close"+"</button>"+"</a>"+"</td>";
+    SiteName += "<table border='1|1'>";
+    SiteName += "<th>"+"Site Id"+"</th>";
+    SiteName += "<th>"+"Site Name"+"</th>";
+    for (let i = 0; i < data.length; i++) {
+      SiteName += "<tr>";
+      SiteName += "<td>"+data[i].sid+"</td>";
+      SiteName += "<td>"+data[i].sname+"</td>";
+      SiteName += "</tr>";
+    }
+    SiteName += "</table>";
+    document.getElementById("cid_"+cid).innerHTML = SiteName;
+  });
+}
+
+function closesd(cid) {
+  document.getElementById("cid_"+cid).innerHTML = "<td >"+"<button onclick='getSitesForCampaign("+cid+")'>"+"Sites"+"</button>"+"</a>"+"</td>";
+}
 </script>
 
 </html>
