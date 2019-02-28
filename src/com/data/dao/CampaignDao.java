@@ -27,9 +27,6 @@ public class CampaignDao extends GenericDao {
 		
 		
 		try {
-			//Class.forName("com.mysql.cj.jdbc.Driver");  
-			//Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/campaign_mgmt","root","password");  
-			
 			Statement stmt= con.createStatement();
 			ResultSet rs = stmt.executeQuery(SQL_GET_CAMPAIGN);
 			
@@ -54,7 +51,7 @@ public class CampaignDao extends GenericDao {
 			stmt.setInt(1, cid);
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.getMessage();
 		}
 		
 	}
@@ -66,7 +63,7 @@ public class CampaignDao extends GenericDao {
 			System.out.println("Insert Statement: " + stmt.toString());
 			stmt.executeUpdate();
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.getMessage();
 		}
 	}
 }  

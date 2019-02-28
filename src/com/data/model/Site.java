@@ -3,8 +3,7 @@ package com.data.model;
 public class Site {
 	private int sid;
     private String sname;
-    public Campaign camp;
-    
+
 	public int getSid() {
 		return sid;
 	}
