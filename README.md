@@ -11,3 +11,6 @@ One campaign can have multiple sites and one site can be part of multiple campai
 
 *Database in MySQL workbench(local):* Schema:campaign_mgmt 
                                       Tables: campaign, sites, campaign_site_xref
+
+*Note:* If the browser gives no-cors issue -  Go to run -> chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security
+And use this browser
